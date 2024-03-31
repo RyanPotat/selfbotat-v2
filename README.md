@@ -1,0 +1,1 @@
+very bad bot written in go for fun and learning

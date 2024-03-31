@@ -1,0 +1,13 @@
+{
+  "login": "twitch login",
+  "id": "twitch id",
+  "password": "twitch oauth",
+  "client_id": "twitch client id",
+  "prefix": "go",
+  "postgres": {
+    "user": "postgres",
+    "host": "localhost",
+    "database": "postgres",
+    "password": ""
+  }
+}
