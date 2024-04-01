@@ -23,19 +23,13 @@ func InitClient() (error, bool) {
 
 	Client = twitch.NewClient(cfg.Login, fmt.Sprintf("oauth:%s", cfg.Password))
 
-	Client.Capabilities = []string{
-		twitch.TagsCapability, 
-		twitch.CommandsCapability,
-		twitch.MembershipCapability,
-	}
-
 	Client.OnPrivateMessage(parseMessage)
 
-	Client.OnUserJoinMessage(func(msg twitch.UserJoinMessage) {
+	Client.OnSelfJoinMessage(func(msg twitch.UserJoinMessage) {
 		Log.Printf("Joined #%s\n", msg.Channel)
 	})
 
-	Client.OnUserPartMessage(func(msg twitch.UserPartMessage) {
+	Client.OnSelfPartMessage(func(msg twitch.UserPartMessage) {
 		Log.Printf("Parted #%s\n", msg.Channel)
 	})
 
