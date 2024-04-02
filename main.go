@@ -7,10 +7,10 @@ import (
 
 	"selfbotat-v2/bot/database"
 	"selfbotat-v2/bot/config"
+  "selfbotat-v2/bot/logger"
 
 	_ "selfbotat-v2/bot/commands"
 	client "selfbotat-v2/bot/client"
-  Logger "selfbotat-v2/bot/logger"
 )
 
 var cfg config.Config
@@ -27,7 +27,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		Logger.Debug("Postgres connected")
+		Log.Debug.Print("Postgres connected")
 	}
 
 	client.Create()

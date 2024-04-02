@@ -3,9 +3,10 @@ package commands
 import (
 	"strconv"
 	"strings"
+
 	"selfbotat-v2/bot"
 	"selfbotat-v2/bot/client"
-	Logger "selfbotat-v2/bot/logger"
+	"selfbotat-v2/bot/logger"
 )
 
 func init() {
@@ -14,7 +15,7 @@ func init() {
 		Execute: func(msg *bot.MessageData) {
 			count, err := strconv.Atoi(msg.Args[0])
 			if err != nil {
-				Logger.Error("Error parsing spam count", err)
+				Log.Error.Print("Error parsing spam count", err)
 				return
 			}
 			for i := 0; i < count; i++ {

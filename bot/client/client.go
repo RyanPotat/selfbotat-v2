@@ -9,10 +9,8 @@ import (
 	"selfbotat-v2/bot"
 	"selfbotat-v2/bot/config"
 	"selfbotat-v2/bot/database"
-
-	Logger "selfbotat-v2/bot/logger"
-
-	twitch "github.com/gempir/go-twitch-irc/v4"
+	"selfbotat-v2/bot/logger"
+	"github.com/gempir/go-twitch-irc/v4"
 )
 
 const (
@@ -54,7 +52,7 @@ func ensurePool() {
 
 			err := client.Connect()
 			if err != nil {
-					Logger.Error("Error connecting to Twitch", err)
+					Log.Error.Println("Error connecting to Twitch", err)
 			}
 		}(i + 1)
 	}
@@ -82,13 +80,13 @@ func applyListeners(client *ChatClient, clientID int) {
 	})
 
 	client.OnSelfJoinMessage(func(msg twitch.UserJoinMessage) {
-		Logger.Infof("Joined #%s\n", msg.Channel)
+		Log.Info.Printf("Joined #%s", msg.Channel)
 		client.joinedChannels[msg.Channel] = true
 		totalJoined[msg.Channel] = true
 	})
 
 	client.OnSelfPartMessage(func(msg twitch.UserPartMessage) {
-		Logger.Infof("Parted #%s\n", msg.Channel)
+		Log.Info.Printf("Parted #%s", msg.Channel)
 		client.joinedChannels[msg.Channel] = false
 		totalJoined[msg.Channel] = false
 	})
@@ -96,7 +94,7 @@ func applyListeners(client *ChatClient, clientID int) {
 	client.OnConnect(func() {
 		clientCount += 1
 		if clientID == ensurePoolSize {
-			Logger.Debug("IRC connected")
+			Log.Debug.Printf("IRC connected")
 			joinChannels()
 		}
 	})
@@ -107,7 +105,7 @@ func applyListeners(client *ChatClient, clientID int) {
 func joinChannels() {
 	channels, err := db.GetChannels()
 	if err != nil {
-		Logger.Error("Error getting channels", err)
+		Log.Error.Print("Error getting channels", err)
 		return
 	}
 
@@ -139,7 +137,7 @@ func Join(channel string) bool {
 
 		err := client.Connect()
 		if err != nil {
-				Logger.Error("Error connecting to Twitch", err)
+				Log.Error.Print("Error connecting to Twitch", err)
 		}
 	}
 
