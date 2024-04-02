@@ -1,8 +1,6 @@
 package bot
 
 import (
-	"os"
-	"log"
 	"time"
 
 	"github.com/gempir/go-twitch-irc/v4"
@@ -42,12 +40,15 @@ type MessageData struct {
 var (
 	Client *twitch.Client
 	StartTime time.Time
-	Log = log.New(os.Stdout, "SelfBot: ", log.LstdFlags)
 	cmds = []Command{}
 )
 
 func AddCmd(cmd Command) {
 	cmds = append(cmds, cmd)
+}
+
+func GetCmds() []Command {
+	return cmds
 }
 
 

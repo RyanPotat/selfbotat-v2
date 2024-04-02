@@ -19,6 +19,7 @@ type User struct {
 
 type Channel struct {
 	ID       int       `db:"id"`
+	UserID   int       `db:"user_id"`
 	JoinedAt time.Time `db:"joined_at"`
 }
 
@@ -87,12 +88,19 @@ func NewUser(id, login, name string) User {
 	return User{}
 }
 
-func GetUserByID(id string) (User, bool) {
-	rows, err := pool.Query(`
-	  SELECT id, user_id, username, display, first_seen
+func GetUser(id string, loginOrID bool) (User, bool) {
+	queryType := "user_id"
+	if loginOrID {
+		queryType = "username"
+	}
+
+	queryString := fmt.Sprintf(`
+		SELECT id, user_id, username, display, first_seen
 		FROM users 
-		WHERE user_id = $1
-		`, id,
+		WHERE %s = $1
+	`, queryType)
+
+	rows, err := pool.Query(queryString, id,
 		)
 	if err != nil {
 		return User{}, false
@@ -149,10 +157,19 @@ func NewChannel(id string) Channel {
 	return Channel{}
 }
 
-func GetChannelByID(id string) Channel {	
+func GetChannel(id string, loginOrID bool) Channel {	
+	queryType := "user_id"
+	if loginOrID {
+		queryType = "username"
+	}
 
+	queryString := fmt.Sprintf(`
+	  SELECT * FROM channels WHERE user_id = $1
+		JOIN users AS u ON c.user_id = u.user_id
+		WHERE u.%s = $1
+	`, queryType)
 
-	rows, err := pool.Query(`SELECT * FROM channels WHERE user_id = $1`, id)
+	rows, err := pool.Query(queryString, id)
 	if err != nil {
 		return Channel{}
 	}

@@ -6,8 +6,11 @@ import (
 	"time"
 
 	"selfbotat-v2/bot/database"
-	_ "selfbotat-v2/bot/commands"
 	"selfbotat-v2/bot/config"
+
+	_ "selfbotat-v2/bot/commands"
+	client "selfbotat-v2/bot/client"
+  Logger "selfbotat-v2/bot/logger"
 )
 
 var cfg config.Config
@@ -24,17 +27,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	} else {
-		bot.Log.Println("Postgres connected")
+		Logger.Debug("Postgres connected")
 	}
 
-	err, success := bot.InitClient()
-	if err != nil {
-			panic(err)
-	} 
-
-	if !success {
-			panic("Failed to initialize client")
-	}
+	client.Create()
 }
 
 

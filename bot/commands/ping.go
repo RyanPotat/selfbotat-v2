@@ -6,6 +6,7 @@ import (
 	"runtime"
 	"strings"
 	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/client"
 )
 
 func init() {
@@ -19,11 +20,11 @@ func init() {
 		
 				response := []string{
 					"GoldPLZ 🏓",
-					fmt.Sprintf("Usage: %d MiB", used.Alloc / 1024 / 1024),
+					fmt.Sprintf("Usage: %d MiB", used.TotalAlloc / 1024 / 1024),
 					fmt.Sprintf("Uptime: %s", time.Since(bot.StartTime).Round(time.Second)),
 				}
 		
-				bot.Client.Say(msg.Channel.Login, strings.Join(response, " ● "))
+				client.Say(msg.Channel.Login, strings.Join(response, " ● "))
 		},
 	})
 }
