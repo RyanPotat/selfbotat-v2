@@ -41,12 +41,16 @@ func Create() {
 
 func ensurePool() {
 	var wg sync.WaitGroup
+	var poolMutex sync.Mutex
 
 	for i := 0; i < ensurePoolSize; i++ {
 		wg.Add(1)
 		go func(clientID int) {
 			defer wg.Done()
+
+			poolMutex.Lock()
 			client := createClient(clientID)
+			poolMutex.Unlock()
 
 			err := client.Connect()
 			if err != nil {
@@ -59,13 +63,14 @@ func ensurePool() {
 }
 
 func createClient(clientID int) *ChatClient {
+
 	client := &ChatClient{
 			twitch.NewClient(cfg.Login, fmt.Sprintf("oauth:%s", cfg.Password)),
 			make(map[string]bool),
 	}
 
 	ClientPool[clientID] = client
-
+	
 	applyListeners(client, clientID)
 
 	return client

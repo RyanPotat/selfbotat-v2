@@ -20,7 +20,8 @@ func init() {
 		
 				response := []string{
 					"GoldPLZ 🏓",
-					fmt.Sprintf("Usage: %d MiB", used.TotalAlloc / 1024 / 1024),
+					fmt.Sprintf("Usage: %d MiB", used.HeapInuse / 1024 / 1024),
+					fmt.Sprintf("Allocated: %d MiB", used.TotalAlloc / 1024 / 1024),
 					fmt.Sprintf("Uptime: %s", time.Since(bot.StartTime).Round(time.Second)),
 				}
 		
