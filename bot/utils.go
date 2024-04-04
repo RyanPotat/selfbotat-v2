@@ -1,22 +1,23 @@
 package bot
 
-type Predicate func(any) bool
+type Predicate[T any] func(T) bool
 
-func Filter(slice []any, predicate Predicate) []any {
-	var result []any
+func Filter[T any](slice []T, predicate Predicate[T]) []T {
+	var result []T
 	for _, v := range slice {
-			if predicate(v) {
-					result = append(result, v)
-			}
+		if predicate(v) {
+			result = append(result, v)
+		}
 	}
 	return result
 }
 
-func Find(slice []interface{}, predicate Predicate) interface{} {
+func Find[T any](slice []T, predicate Predicate[T]) (T, bool) {
 	for _, v := range slice {
 		if predicate(v) {
-			return v
+			return v, true
 		}
 	}
-	return nil
+	var notFound T
+	return notFound, false
 }

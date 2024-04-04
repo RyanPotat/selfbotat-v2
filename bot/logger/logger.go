@@ -17,10 +17,9 @@ type LogLevel color.Attribute
 const (
     INFO    = color.FgHiGreen
     DEBUG	  = color.FgCyan
-    WARNING = color.FgYellow
+    WARN = color.FgYellow
     ERROR   = color.FgHiRed
 )
-
 
 func New(prefix string, level LogLevel) *Logger {
 	return &Logger{
@@ -39,7 +38,7 @@ func (l *Logger) Printf(format string, v ...interface{}) {
 
 var (
 	Info    = New(color.New(color.BgHiGreen).Sprint(" INFO "), LogLevel(INFO))
-	Warning = New(color.New(color.BgYellow).Sprint(" WARNING "), LogLevel(WARNING))
+	Warn = New(color.New(color.BgYellow).Sprint(" WARN "), LogLevel(WARN))
 	Debug   = New(color.New(color.BgCyan).Sprint(" DEBUG "), LogLevel(DEBUG))
 	Error   = New(color.New(color.BgHiRed).Sprint(" ERROR "), LogLevel(ERROR))
 )
