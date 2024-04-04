@@ -3,7 +3,7 @@ package client
 import (
 	"fmt"
 	"sync"
-	//"slices"
+	"strconv"
 	"strings"
 
 	"selfbotat-v2/bot"
@@ -16,6 +16,7 @@ import (
 const (
 	ensurePoolSize = 50
 	maxClientSize  = 100
+	maxMessageSize = 500
 )
 
 var (
@@ -160,6 +161,10 @@ func Say(channel, message string) {
 	lastClientIndex = (lastClientIndex + 1) % (len(ClientPool))
 	client := ClientPool[lastClientIndex + 1]
 
+	if len(message) > maxMessageSize {
+		message = message[:maxMessageSize]
+	}
+
 	client.Say(channel, message)
 }
 
@@ -186,10 +191,9 @@ func parseMessage(msg twitch.PrivateMessage) {
 
 	rawText := strings.TrimPrefix(msg.Message, cfg.Prefix)
 	parts := strings.Split(strings.TrimSpace(rawText), " ")
-	//params := slices.Contains(parts[1:], ":")
-
 	cmd := parts[0]
 	args := parts[1:]
+	params := createParams(args)
 
 	handleMessage(&bot.MessageData{
 		User: user,
@@ -197,7 +201,7 @@ func parseMessage(msg twitch.PrivateMessage) {
 		Text: msg.Message,
 		Command: cmd,
 		Args: args,
-		Params: make(map[string]interface{}),
+		Params: params,
 		Hashtags: nil,
 		Raw: msg,
 	})
@@ -216,6 +220,36 @@ func handleMessage(msg *bot.MessageData) {
 	for _, cmd := range bot.GetCmds() {
 		if cmd.Name == msg.Command {
 			cmd.Execute(msg)
+		} else if len(cmd.Aliases) > 0 {
+			for _, alias := range cmd.Aliases {
+				if alias == msg.Command {
+					cmd.Execute(msg)
+				}
+			}
 		}
 	}
+}
+
+
+func createParams(args []string) map[string]interface{} {
+	paramsObject := make(map[string]interface{})
+
+	for _, param := range args {
+		if strings.Contains(param, ":") {
+			splitParam := strings.Split(param, ":")
+			key := strings.ToLower(splitParam[0])
+			value := splitParam[1]
+			if value == "true" || value == "false" {
+				boolValue, _ := strconv.ParseBool(value)
+				paramsObject[key] = boolValue
+			} else {
+				paramsObject[key] = value
+			}
+		} else if strings.HasPrefix(param, "-") {
+			key := strings.TrimPrefix(param, "-")
+			paramsObject[key] = true
+		}
+	}
+
+	return paramsObject
 }
