@@ -14,31 +14,33 @@ type PostgresConfig struct {
 	Database string `json:"database"`
 }
 
-type Config struct {
+type TwitchConfig struct {
 	Login string `json:"login"`
 	Id string `json:"id"`
 	Password string `json:"password"`
 	ClientID string `json:"client_id"`
+	TLAHeaders map[string]string `json:"tlaHeaders"`
+	TLAURI string `json:"tlaUri"`
+}
+
+type BotConfig struct {
 	Prefix string `json:"prefix"`
 	Postgres PostgresConfig `json:"postgres"`
+	Twitch TwitchConfig `json:"twitch"`
 }
 
-var cfg Config
+var Config BotConfig
 
-func LoadConfig() (Config, error) {
+func LoadConfig() (BotConfig, error) {
 	fillData, err := os.ReadFile("config.json")
 	if err != nil {
-		return Config{}, fmt.Errorf("error loading config: %w", err)
+		return BotConfig{}, fmt.Errorf("error loading config: %w", err)
 	}
 
-	err = json.Unmarshal(fillData, &cfg)
+	err = json.Unmarshal(fillData, &Config)
 	if err != nil {
-		return Config{}, fmt.Errorf("error parsing config: %w", err)
+		return BotConfig{}, fmt.Errorf("error parsing config: %w", err)
 	}
 
-	return cfg, nil
-}
-
-func GetConfig() Config {
-	return cfg
+	return Config, nil
 }

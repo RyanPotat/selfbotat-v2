@@ -20,7 +20,6 @@ const (
 )
 
 var (
-	cfg             config.Config
 	totalJoined     = make(map[string]bool)
 	clientCount     = 1
 	ClientPool      = make(map[int]*ChatClient)
@@ -33,8 +32,6 @@ type ChatClient struct {
 }
 
 func Create() {
-	cfg = config.GetConfig()
-
 	ensurePool()
 }
 
@@ -64,7 +61,10 @@ func ensurePool() {
 func createClient(clientID int) *ChatClient {
 
 	client := &ChatClient{
-			twitch.NewClient(cfg.Login, fmt.Sprintf("oauth:%s", cfg.Password)),
+			twitch.NewClient(
+				config.Config.Twitch.Login, 
+				fmt.Sprintf("oauth:%s", config.Config.Twitch.Password),
+			),
 			make(map[string]bool),
 	}
 
@@ -189,7 +189,7 @@ func parseMessage(msg twitch.PrivateMessage) {
 		Login: msg.Channel,
 	}
 
-	rawText := strings.TrimPrefix(msg.Message, cfg.Prefix)
+	rawText := strings.TrimPrefix(msg.Message, config.Config.Prefix)
 	parts := strings.Split(strings.TrimSpace(rawText), " ")
 	cmd := parts[0]
 	args := parts[1:]
@@ -209,11 +209,11 @@ func parseMessage(msg twitch.PrivateMessage) {
 
 // temp handler while I figure some structure
 func handleMessage(msg *bot.MessageData) {
-	if msg.User.ID != cfg.Id {
+	if msg.User.ID != config.Config.Twitch.Id {
 		return
 	}
 
-	if !strings.HasPrefix(msg.Text, cfg.Prefix) {
+	if !strings.HasPrefix(msg.Text, config.Config.Prefix) {
 		return
 	}
 

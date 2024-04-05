@@ -164,7 +164,10 @@ func GetChannel(id string, loginOrID bool) Channel {
 	}
 
 	queryString := fmt.Sprintf(`
-	  SELECT * FROM channels WHERE user_id = $1
+	  SELECT c.user_id, c.joined_at
+		FROM (
+			SELECT user_id, joined_at FROM channels WHERE user_id = $1
+		)
 		JOIN users AS u ON c.user_id = u.user_id
 		WHERE u.%s = $1
 	`, queryType)

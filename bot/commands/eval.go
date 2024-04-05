@@ -6,36 +6,35 @@ import (
 	"os/exec"
 
 	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/client"
 )
 
 func init() {
 	bot.AddCmd(bot.Command{
-		Name:     "eval",
-		Execute: func(msg *bot.MessageData) {
-			code := fmt.Sprintf(`
-			  package main
-				
-				import (
-					"fmt"
-					"time"
-					"runtime"
-					"strings"
-				)	
+			Name: "eval",
+			Execute: func(msg *bot.MessageData) {
+					code := strings.Join(msg.Args, " ")
 
-				%s
-			`, strings.Join(msg.Args, " "))
+					output, err := runGoCode(code)
+					if err != nil {
+						  client.Say(msg.Channel.Login, fmt.Sprintf("Error: %s", err.Error()))
+							return
+					}
 
-			fmt.Println(code)
-			cmd := exec.Command("go", "run")
-			cmd.Stdin = strings.NewReader(code)
-		
-			output, err := cmd.CombinedOutput()
-			if err != nil {
-				bot.Client.Say(msg.Channel.Login, string(err.Error()))
-				return
-			}
-		
-			bot.Client.Say(msg.Channel.Login, string(output))
-		},
+					client.Say(msg.Channel.Login, output)
+			},
 	})
+}
+
+func runGoCode(code string) (string, error) {
+	cmd := exec.Command("go", "run")
+
+	cmd.Stdin = strings.NewReader(code)
+
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+			return "", fmt.Errorf("execution failed: %s", err.Error())
+	}
+
+	return string(output), nil
 }
