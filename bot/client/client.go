@@ -2,7 +2,6 @@ package client
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"sync"
 
@@ -11,6 +10,7 @@ import (
 	"selfbotat-v2/bot/database"
 	"selfbotat-v2/bot/logger"
 	"selfbotat-v2/bot/types"
+	"selfbotat-v2/bot/utils"
 
 	"github.com/gempir/go-twitch-irc/v4"
 )
@@ -195,7 +195,7 @@ func parseMessage(msg twitch.PrivateMessage) {
 	parts := strings.Split(strings.TrimSpace(rawText), " ")
 	cmd := parts[0]
 	args := parts[1:]
-	params := createParams(args)
+	params := utils.CreateParams(args)
 
 	handleMessage(&types.MessageData{
 		User: user,
@@ -219,39 +219,11 @@ func handleMessage(msg *types.MessageData) {
 		return
 	}
 
-	for _, cmd := range bot.Cmds {
-		if cmd.Name == msg.Command {
-			cmd.Execute(msg)
-		} else if len(cmd.Aliases) > 0 {
-			for _, alias := range cmd.Aliases {
-				if alias == msg.Command {
-					cmd.Execute(msg)
-				}
-			}
-		}
+	cmd := bot.FindCmd(msg.Command)
+	if cmd != nil {
+		cmd.Execute(msg)
+		return
 	}
 }
 
 
-func createParams(args []string) map[string]interface{} {
-	paramsObject := make(map[string]interface{})
-
-	for _, param := range args {
-		if strings.Contains(param, ":") {
-			splitParam := strings.Split(param, ":")
-			key := strings.ToLower(splitParam[0])
-			value := splitParam[1]
-			if value == "true" || value == "false" {
-				boolValue, _ := strconv.ParseBool(value)
-				paramsObject[key] = boolValue
-			} else {
-				paramsObject[key] = value
-			}
-		} else if strings.HasPrefix(param, "-") {
-			key := strings.TrimPrefix(param, "-")
-			paramsObject[key] = true
-		}
-	}
-
-	return paramsObject
-}

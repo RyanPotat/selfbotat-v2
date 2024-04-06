@@ -6,6 +6,10 @@ import (
 	"time"
 )
 
+var Make = &http.Client{
+	Timeout: time.Second * 10,
+}
+
 func MakeRequest(
 	method string, 
 	url string, 
@@ -21,11 +25,9 @@ func MakeRequest(
 		req.Header.Set(k, v)
 	}
 
-	client := &http.Client{
-		Timeout: time.Second * 10,
-	}
+	
 
-	res, err := client.Do(req)
+	res, err := Make.Do(req)
 	if err != nil {
 		return nil, err
 	}

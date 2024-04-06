@@ -47,7 +47,7 @@ func query(
 
 	res, err := MakeRequest(
 		"POST", 
-		config.Config.Twitch.TLAURI, 
+		config.Config.URIs.TLA, 
 		config.Config.Twitch.TLAHeaders,
 		bytes.NewBuffer(queryJSON),
 	)

@@ -14,8 +14,6 @@ import (
 	_ "selfbotat-v2/bot/commands"
 )
 
-var Config config.BotConfig
-
 func main() {
 	go func() {
 		Log.Debug.Println(http.ListenAndServe("localhost:1337", nil))
@@ -23,9 +21,9 @@ func main() {
 
 	connStr := fmt.Sprintf(
 		"postgres://%s:%s@localhost/%s?sslmode=disable", 
-		Config.Postgres.User, 
-		Config.Postgres.Password,
-		Config.Postgres.Database,
+		config.Config.Postgres.User, 
+		config.Config.Postgres.Password,
+		config.Config.Postgres.Database,
 	)
 
 	err := db.InitDatabase(connStr)
@@ -40,7 +38,7 @@ func main() {
 
 func init() {
 	var err error
-	Config, err = config.LoadConfig()
+	err = config.LoadConfig()
 	if err != nil {
 		panic(err)
 	}

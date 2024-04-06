@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -67,4 +68,27 @@ func Humanize(d time.Duration, limit int) string {
 	}
 	
 	return strings.Trim(out, " ")
+}
+
+func CreateParams(args []string) map[string]interface{} {
+	paramsObject := make(map[string]interface{})
+
+	for _, param := range args {
+		if strings.Contains(param, ":") {
+			splitParam := strings.Split(param, ":")
+			key := strings.ToLower(splitParam[0])
+			value := splitParam[1]
+			if value == "true" || value == "false" {
+				boolValue, _ := strconv.ParseBool(value)
+				paramsObject[key] = boolValue
+			} else {
+				paramsObject[key] = value
+			}
+		} else if strings.HasPrefix(param, "-") {
+			key := strings.TrimPrefix(param, "-")
+			paramsObject[key] = true
+		}
+	}
+
+	return paramsObject
 }

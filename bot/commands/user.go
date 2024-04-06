@@ -1,17 +1,18 @@
 package commands
 
 import (
-	"time"
 	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
+	"time"
 
 	"selfbotat-v2/bot"
 	"selfbotat-v2/bot/api"
+	"selfbotat-v2/bot/client"
 	"selfbotat-v2/bot/types"
 	"selfbotat-v2/bot/utils"
-	"selfbotat-v2/bot/client"
 )
 
 func init() {
@@ -26,32 +27,50 @@ func init() {
 				input = msg.Args[0]
 			}
 
-			user, err := api.GetUserOrError(input)
-			if err != nil {
-				client.Say(msg.Channel.Login, "⚠️ " + err.Error())
-				return
-			}
+			var wg sync.WaitGroup
+			wg.Add(2)
 
-			if user.ID == "" && user.Key == "" {
-				userDoesntExist(msg)
-				return
-			}
-
-			if user.Reason != "" {
-				if user.Reason == "UNKNOWN" {
-					userDoesntExist(msg)
-					return
-				}
-
-				banType := user.Reason
-
-				user, err = api.GetTwitchUser(input)
-				user.Reason = banType
+			var user *types.TwitchUser
+			go func() {
+				defer wg.Done()
+				var err error
+				user, err = api.GetUserOrError(input)
 				if err != nil {
 					client.Say(msg.Channel.Login, "⚠️ " + err.Error())
 					return
 				}
-			}
+	
+				if user.ID == "" && user.Key == "" {
+					userDoesntExist(msg)
+					return
+				}
+	
+				if user.Reason != "" {
+					if user.Reason == "UNKNOWN" {
+						userDoesntExist(msg)
+						return
+					}
+	
+					banType := user.Reason
+	
+					user, err = api.GetTwitchUser(input)
+					user.Reason = banType
+					if err != nil {
+						client.Say(msg.Channel.Login, "⚠️ " + err.Error())
+						return
+					}
+				}
+			}()
+
+			var ok bool
+			var afkUser *types.AFKData
+			go func() {
+				defer wg.Done()
+				afkUser, ok = api.GetAFK(input)
+				if !ok { return	}
+			}()
+
+			wg.Wait()
 
 			response := map[string]interface{}{
 				"": nameBuilder(user),
@@ -64,12 +83,13 @@ func init() {
 				"Bio": user.Description,
 				"Created": getAgo(user.CreatedAt, 3),
 				"Last Live": offlineBuilder(user),
+				"Currently AFK": afkBuilder(afkUser),
 				"🔴 Live for": liveBuilder(user),
 			}
 
 			// Enforce order of response (idk how else to do this lol)
 			keys := []string{
-				"", "ID", "Roles", "Followers", "Following", "Chatters", "Prefix", "Bio", "Created", "Last Live", "🔴 Live for",
+				"", "ID", "Roles", "Followers", "Following", "Chatters", "Prefix", "Bio", "Created", "Last Live", "Currently AFK", "🔴 Live for",
 			}
 
 			out := ""
@@ -169,6 +189,15 @@ func liveBuilder(user *types.TwitchUser) string {
 func userDoesntExist(msg *types.MessageData) {
 	// TODO: check name availability here
 	client.Say(msg.Channel.Login, "⚠️ User not found")
+}
+
+func afkBuilder(afkUser *types.AFKData) string {
+	if afkUser == nil {
+		return ""
+	}
+
+	afkAgo := getAgo(afkUser.Started, 2)
+	return fmt.Sprintf("%s (%s)", afkUser.Text, afkAgo)
 }
 
 var roleMap = map[string]string{
