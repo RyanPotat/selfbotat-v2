@@ -2,14 +2,16 @@ package client
 
 import (
 	"fmt"
-	"sync"
 	"strconv"
 	"strings"
+	"sync"
 
 	"selfbotat-v2/bot"
 	"selfbotat-v2/bot/config"
 	"selfbotat-v2/bot/database"
 	"selfbotat-v2/bot/logger"
+	"selfbotat-v2/bot/types"
+
 	"github.com/gempir/go-twitch-irc/v4"
 )
 
@@ -178,13 +180,13 @@ func parseMessage(msg twitch.PrivateMessage) {
 		)
 	}
 
-	user := bot.User{
+	user := types.User{
 		ID: msg.User.ID,
 		Login: msg.User.Name,
 		Name: msg.User.DisplayName,
 	}
 
-	channel := bot.Channel{
+	channel := types.Channel{
 		ID: msg.RoomID,
 		Login: msg.Channel,
 	}
@@ -195,7 +197,7 @@ func parseMessage(msg twitch.PrivateMessage) {
 	args := parts[1:]
 	params := createParams(args)
 
-	handleMessage(&bot.MessageData{
+	handleMessage(&types.MessageData{
 		User: user,
 		Channel: channel,
 		Text: msg.Message,
@@ -208,7 +210,7 @@ func parseMessage(msg twitch.PrivateMessage) {
 }
 
 // temp handler while I figure some structure
-func handleMessage(msg *bot.MessageData) {
+func handleMessage(msg *types.MessageData) {
 	if msg.User.ID != config.Config.Twitch.Id {
 		return
 	}
@@ -217,7 +219,7 @@ func handleMessage(msg *bot.MessageData) {
 		return
 	}
 
-	for _, cmd := range bot.GetCmds() {
+	for _, cmd := range bot.Cmds {
 		if cmd.Name == msg.Command {
 			cmd.Execute(msg)
 		} else if len(cmd.Aliases) > 0 {

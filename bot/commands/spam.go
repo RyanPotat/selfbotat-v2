@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/types"
+	"selfbotat-v2/bot/utils"
 	"selfbotat-v2/bot/client"
 	"selfbotat-v2/bot/logger"
 )
@@ -18,10 +20,10 @@ var (
 )
 
 func init() {
-	bot.AddCmd(bot.Command{
+	bot.AddCmd(types.Command{
 		Name:     "spam",
 		Aliases: []string{"s"},
-		Execute: func(msg *bot.MessageData) {
+		Execute: func(msg *types.MessageData) {
 			// stop the spamming
 			if stop, ok := msg.Params["stop"]; ok && stop.(bool) {
 				if spamming {
@@ -58,7 +60,7 @@ func init() {
 			}
 
 			// filter out params
-			filteredArgs := bot.Filter(msg.Args, func(arg string) bool {
+			filteredArgs := utils.Filter(msg.Args, func(arg string) bool {
 				return !(strings.HasPrefix(arg, "-") || strings.Contains(arg, ":"))
 			})
 

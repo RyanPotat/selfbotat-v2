@@ -6,13 +6,14 @@ import (
 	"os/exec"
 
 	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/types"
 	"selfbotat-v2/bot/client"
 )
 
 func init() {
-	bot.AddCmd(bot.Command{
+	bot.AddCmd(types.Command{
 			Name: "eval",
-			Execute: func(msg *bot.MessageData) {
+			Execute: func(msg *types.MessageData) {
 					code := strings.Join(msg.Args, " ")
 
 					output, err := runGoCode(code)

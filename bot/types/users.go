@@ -9,45 +9,45 @@ type TwitchUsers struct {
 }
 
 type TwitchUser struct {
-	ID                 string          `json:"id"`
-	Login              string          `json:"login"`
-	DisplayName        string          `json:"displayName"`
-	ChatColor          string          `json:"chatColor"`
-	Description        string          `json:"description"`
-	ProfileImageURL    string          `json:"profileImageURL"`
-	BannerImageURL     string          `json:"bannerImageURL"`
-	CreatedAt          time.Time       `json:"createdAt"`
-	UpdatedAt          time.Time       `json:"updatedAt"`
-	HasPrime           bool            `json:"hasPrime"`
-	HasTurbo           bool            `json:"hasTurbo"`
-	Followers          Followers       `json:"followers"`
-	Follows            Followers       `json:"follows"`
-	EmoticonPrefix     EmoticonPrefix  `json:"emoticonPrefix"`
+	ID                 string            `json:"id"`
+	Login              string            `json:"login"`
+	DisplayName        string            `json:"displayName"`
+	ChatColor          string            `json:"chatColor"`
+	Description        string            `json:"description"`
+	ProfileImageURL    string            `json:"profileImageURL"`
+	BannerImageURL     string            `json:"bannerImageURL"`
+	CreatedAt          time.Time         `json:"createdAt"`
+	UpdatedAt          time.Time         `json:"updatedAt"`
+	HasPrime           bool              `json:"hasPrime"`
+	HasTurbo           bool              `json:"hasTurbo"`
+	Followers          Followers         `json:"followers"`
+	Follows            Followers         `json:"follows"`
+	EmoticonPrefix     EmoticonPrefix    `json:"emoticonPrefix"`
 	BroadcastSettings  BroadcastSettings `json:"broadcastSettings"`
-	Stream             *Stream         `json:"stream"`
-	LastBroadcast      LastBroadcast   `json:"lastBroadcast"`
-	Roles              Roles           `json:"roles"`
-	Key                string          `json:"key,omitempty"`
-	Reason             string          `json:"reason,omitempty"`
-	Banned             bool            `json:"banned,omitempty"`
-	PrimaryTeam        *PrimaryTeam    `json:"primaryTeam"`
-	Channel            UserChannel     `json:"channel"`
-	Team               *string         `json:"team"`
-	TeamName           *string         `json:"teamName"`
-	ChatterCount       int             `json:"chatterCount"`
-	EmotePrefix        EmoticonPrefix  `json:"emotePrefix"`
+	Stream             *Stream           `json:"stream"`
+	LastBroadcast      LastBroadcast     `json:"lastBroadcast"`
+	Roles              Roles             `json:"roles"`
+	Key                string            `json:"key,omitempty"`
+	Reason             string            `json:"reason,omitempty"`
+	Banned             bool              `json:"banned,omitempty"`
+	PrimaryTeam        *PrimaryTeam      `json:"primaryTeam"`
+	Channel            UserChannel       `json:"channel"`
+	Team               *string           `json:"team"`
+	TeamName           *string           `json:"teamName"`
+	ChatterCount       int               `json:"chatterCount"`
+	EmotePrefix        EmoticonPrefix    `json:"emotePrefix"`
 }
 
 type UserChannel struct {
-	Chatters           TwitchChatters `json:"chatters"`
+	Chatters           TwitchChatters  `json:"chatters"`
 	RecentChatMessages []TwitchMessage `json:"recentChatMessages"`
 }
 
 type TwitchMessage struct {
 	Content   TwitchMessageContent `json:"content"`
-	DeletedAt time.Time           `json:"deletedAt"`
-	ID        string              `json:"id"`
-	Sender    TwitchUser            `json:"sender"`
+	DeletedAt time.Time            `json:"deletedAt"`
+	ID        string               `json:"id"`
+	Sender    TwitchUser           `json:"sender"`
 	ParentMessage interface{}      `json:"parentMessage"`
 }
 

@@ -2,54 +2,21 @@ package bot
 
 import (
 	"time"
-
-	"github.com/gempir/go-twitch-irc/v4"
+	
+	"selfbotat-v2/bot/types"
 )
-
-type Command struct {
-	Name string
-	Aliases []string
-	Whitelist []string
-	Execute func(msg *MessageData) 
-	Params map[string]interface{}
-	Requires string
-}
-
-type User struct {
-	ID string
-	Name string
-	Login string
-}
-
-type Channel struct {
-	ID string
-	Login string
-}
-
-type MessageData struct {
-	User User
-	Channel Channel
-	Text string
-	Params map[string]interface{}
-	Hashtags []string
-	Command string
-	Args []string
-	Raw twitch.PrivateMessage
-}
 
 var (
-	Client *twitch.Client
+	Cmds = []types.Command{}
 	StartTime time.Time
-	cmds = []Command{}
 )
 
-func AddCmd(cmd Command) {
-	cmds = append(cmds, cmd)
-}
-
-func GetCmds() []Command {
-	return cmds
+func init() {
+	StartTime = time.Now()
 }
 
 
 
+func AddCmd(cmd types.Command) {
+	Cmds = append(Cmds, cmd)
+}

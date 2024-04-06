@@ -1,4 +1,4 @@
-package bot
+package utils
 
 import (
 	"fmt"
@@ -36,7 +36,7 @@ func Humanize(d time.Duration, limit int) string {
 		return "0s"
 	}
 	var result []string
-
+	var out string
 	if d.Hours() > 8760 {
 		result = append(result, fmt.Sprintf("%dy", int(d.Hours()/8760)))
 		d -= time.Duration(int(d.Hours()/8760)) * time.Hour * 8760
@@ -58,5 +58,13 @@ func Humanize(d time.Duration, limit int) string {
 	if d.Seconds() > 0 {
 		result = append(result, fmt.Sprintf("%ds", int(d.Seconds())%60))
 	}
-	return strings.Join(result[:limit], " ")
+
+	for _, v := range result[:limit] {
+		if strings.HasPrefix(v, "0") {
+			continue
+		}
+		out += v + " "
+	}
+	
+	return strings.Trim(out, " ")
 }

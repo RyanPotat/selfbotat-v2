@@ -1,19 +1,21 @@
 package commands
 
 import (
+	"strconv"
+
 	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/types"
 	"selfbotat-v2/bot/client"
 	"selfbotat-v2/bot/logger"
-	"strconv"
 )
 
 func init() {
-	bot.AddCmd(bot.Command{
+		bot.AddCmd(types.Command{
 		Name: "clear",
 		Aliases: []string{"c"},
-		Execute: func(msg *bot.MessageData) {
+		Execute: func(msg *types.MessageData) {
 			if len(msg.Args) == 0 {
-				Log.Warn.Println("No amount specified")
+				Log.Warn.Println("Cmds/Clear: No amount specified")
 				return
 			}
 

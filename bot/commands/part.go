@@ -2,17 +2,20 @@ package commands
 
 import (
 	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/client"
 	"selfbotat-v2/bot/database"
+	"selfbotat-v2/bot/types"
 )
 
 func init() {
-	bot.AddCmd(bot.Command{
+	bot.AddCmd(types.Command{
 		Name:     "part",
-		Execute: func(msg *bot.MessageData) {
+		Execute: func(msg *types.MessageData) {
 			if len(msg.Args) == 0 {
 				return
 			}
-			bot.Client.Depart(msg.Channel.Login)
+
+			client.Part(msg.Channel.Login)
 			db.RemoveChannel(msg.Channel.ID)
 		},
 	})

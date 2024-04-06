@@ -2,27 +2,29 @@ package commands
 
 import (
 	"fmt"
-	"reflect"
-	"selfbotat-v2/bot"
-	"selfbotat-v2/bot/api"
-	"selfbotat-v2/bot/client"
-	"selfbotat-v2/bot/types"
+	"time"
 	"strconv"
 	"strings"
-	"time"
+	"reflect"
+
+	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/api"
+	"selfbotat-v2/bot/utils"
+	"selfbotat-v2/bot/types"
+	"selfbotat-v2/bot/client"
 )
 
 func init() {
-	bot.AddCmd(bot.Command{
+	bot.AddCmd(types.Command{
 		Name: "user",
 		Aliases: []string{"u"},
-		Execute: func(msg *bot.MessageData) {
+		Execute: func(msg *types.MessageData) {
+			var input string
 			if len(msg.Args) == 0 {
-				client.Say(msg.Channel.Login, "FeelsDankMan")
-				return
+				input = msg.User.ID
+			} else {
+				input = msg.Args[0]
 			}
-
-			input := msg.Args[0]
 
 			user, err := api.GetUserOrError(input)
 			if err != nil {
@@ -35,43 +37,26 @@ func init() {
 				return
 			}
 
-			banType := ""
 			if user.Reason != "" {
 				if user.Reason == "UNKNOWN" {
 					userDoesntExist(msg)
 					return
 				}
 
-				banType = user.Reason
+				banType := user.Reason
 
 				user, err = api.GetTwitchUser(input)
+				user.Reason = banType
 				if err != nil {
 					client.Say(msg.Channel.Login, "⚠️ " + err.Error())
 					return
 				}
 			}
 
-			name := user.Login
-			if strings.ToLower(user.DisplayName) != name {
-				name = user.DisplayName
-			}
-
-			switch banType {
-			case INDEF:
-					name = fmt.Sprintf("⛔ @%s is indefinitely banned ryanpo1Despair", name)
-			case TEMP:
-					name = fmt.Sprintf("⚠ @%s is temporarily banned", name)
-			case DMCA:
-					name = fmt.Sprintf("⚠ @%s is temporarily banned for DMCA", name)
-			case DISABLED:
-					name = fmt.Sprintf("⛔ @%s deactivated their account ryanpo1Despair", name)
-			default:
-					name = fmt.Sprintf("@%s", name)
-			}
-
 			response := map[string]interface{}{
+				"": nameBuilder(user),
 				"ID": user.ID,
-				"Roles": buildRoles(user.Roles),
+				"Roles": roleBuilder(user.Roles),
 				"Followers": strconv.Itoa(user.Followers.TotalCount),
 				"Following": strconv.Itoa(user.Follows.TotalCount),
 				"Chatters": strconv.Itoa(user.Channel.Chatters.Count),
@@ -96,13 +81,33 @@ func init() {
 				}
 			}
 
-			out = name + " ● " + strings.TrimSuffix(out, " ● ")
-			client.Say(msg.Channel.Login, out)
+			client.Say(msg.Channel.Login, strings.TrimSuffix(out, " ● "))
 		},
 	})
 }
 
-func buildRoles(roles types.Roles) string {
+func nameBuilder(user *types.TwitchUser) string {
+	name := user.Login
+	if strings.ToLower(user.DisplayName) != name {
+		name = user.DisplayName
+	}
+
+	switch user.Reason {
+	case INDEF:
+			name = fmt.Sprintf("⛔ @%s is indefinitely banned ryanpo1Despair", name)
+	case TEMP:
+			name = fmt.Sprintf("⚠ @%s is temporarily banned", name)
+	case DMCA:
+			name = fmt.Sprintf("⚠ @%s is temporarily banned for DMCA", name)
+	case DISABLED:
+			name = fmt.Sprintf("⛔ @%s deactivated their account ryanpo1Despair", name)
+	default:
+			name = fmt.Sprintf("@%s", name)
+	}
+	return name
+}
+
+func roleBuilder(roles types.Roles) string {
 	var out []string
 
 	v := reflect.ValueOf(roles)
@@ -134,7 +139,7 @@ func buildRoles(roles types.Roles) string {
 
 func getAgo(t time.Time, l int) string {
 	if t.IsZero() { return ""	}
-	return bot.Humanize(time.Since(t), l) + " ago"
+	return utils.Humanize(time.Since(t), l) + " ago"
 }
 
 func offlineBuilder(user *types.TwitchUser) string {
@@ -161,7 +166,7 @@ func liveBuilder(user *types.TwitchUser) string {
 	return fmt.Sprintf("%s%s%s", liveSince, game, viewerString)
 }
 
-func userDoesntExist(msg *bot.MessageData) {
+func userDoesntExist(msg *types.MessageData) {
 	// TODO: check name availability here
 	client.Say(msg.Channel.Login, "⚠️ User not found")
 }

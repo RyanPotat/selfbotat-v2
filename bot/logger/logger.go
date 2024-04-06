@@ -32,8 +32,18 @@ func (l *Logger) Println(v ...interface{}) {
 	l.Output(2, color.New(color.Attribute(l.level)).Sprint(v...))
 }
 
+func (l *Logger) Panicln(v ...interface{}) {
+	l.Output(2, color.New(color.Attribute(l.level)).Sprint(v...))
+	panic(v)
+}
+
 func (l *Logger) Printf(format string, v ...interface{}) {
 	l.Output(2, color.New(color.Attribute(l.level)).Sprintf(format, v...))
+}
+
+func (l *Logger) Panicf(format string, v ...interface{}) {
+	l.Output(2, color.New(color.Attribute(l.level)).Sprintf(format, v...))
+	panic(v)
 }
 
 var (
