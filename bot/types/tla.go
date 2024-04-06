@@ -41,7 +41,8 @@ type TLAUserRes struct {
 
 type TLAUserOrErrorRes struct {
 	Data struct {
-		User TwitchUser `json:"userResultByLogin"`
+		UserLogin TwitchUser `json:"userResultByLogin"`
+		UserID TwitchUser `json:"userResultByID"`
 	} `json:"data"`
 	*TLAGenericRes
 }

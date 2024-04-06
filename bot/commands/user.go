@@ -1,16 +1,16 @@
 package commands
 
 import (
-	"fmt"
 	"time"
+	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
-	"reflect"
 
 	"selfbotat-v2/bot"
 	"selfbotat-v2/bot/api"
-	"selfbotat-v2/bot/utils"
 	"selfbotat-v2/bot/types"
+	"selfbotat-v2/bot/utils"
 	"selfbotat-v2/bot/client"
 )
 
@@ -69,7 +69,7 @@ func init() {
 
 			// Enforce order of response (idk how else to do this lol)
 			keys := []string{
-				"ID", "Roles", "Followers", "Following", "Chatters", "Prefix", "Bio", "Created", "Last Live", "🔴 Live for",
+				"", "ID", "Roles", "Followers", "Following", "Chatters", "Prefix", "Bio", "Created", "Last Live", "🔴 Live for",
 			}
 
 			out := ""
@@ -88,7 +88,7 @@ func init() {
 
 func nameBuilder(user *types.TwitchUser) string {
 	name := user.Login
-	if strings.ToLower(user.DisplayName) != name {
+	if strings.ToLower(user.DisplayName) == name {
 		name = user.DisplayName
 	}
 
