@@ -1,3 +1,7 @@
+github.com/douglascdev/buttifier v0.0.1 h1:ZYTNYwPlVVTS10U2lmxdMkPKBMwU9rHCxPlxR7YC67Q=
+github.com/douglascdev/buttifier v0.0.1/go.mod h1:NwWm2htIvguVOd+IJPZYlIH9Y5x6969bbswtFmPsZ0E=
+github.com/douglascdev/buttifier v0.0.2 h1:5p79OS8zlf7eqpjCD/warnphPCBl0UJG0DALqyj46yc=
+github.com/douglascdev/buttifier v0.0.2/go.mod h1:NwWm2htIvguVOd+IJPZYlIH9Y5x6969bbswtFmPsZ0E=
 github.com/fatih/color v1.16.0 h1:zmkK9Ngbjj+K0yRhTVONQh1p/HknKYSlNT+vZCzyokM=
 github.com/fatih/color v1.16.0/go.mod h1:fL2Sau1YI5c0pdGEVCbKQbLXB6edEj1ZgiY4NijnWvE=
 github.com/gempir/go-twitch-irc/v4 v4.0.0 h1:sHVIvbWOv9nHXGEErilclxASv0AaQEr/r/f9C0B9aO8=
@@ -9,6 +13,8 @@ github.com/mattn/go-colorable v0.1.13/go.mod h1:7S9/ev0klgBDR4GtXTXX8a3vIGJpMovk
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
+github.com/speedata/hyphenation v1.0.2 h1:2rDCtAqNfbf+E56SsqbmNApsVx9CH+4fwIh1RZuu3B8=
+github.com/speedata/hyphenation v1.0.2/go.mod h1:vwrKKvBvJWFll0sVZw99hyWS/+r4YlMI7MAYjnje0nM=
 golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.14.0 h1:Vz7Qs629MkJkGyHxUlRHizWJRG2j8fbQKjELVSNhy7Q=
