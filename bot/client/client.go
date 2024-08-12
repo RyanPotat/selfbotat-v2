@@ -2,15 +2,17 @@ package client
 
 import (
 	"fmt"
+	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/config"
+	"selfbotat-v2/bot/types"
+	"selfbotat-v2/bot/utils"
 	"strings"
 	"sync"
 
-	"selfbotat-v2/bot"
-	"selfbotat-v2/bot/config"
-	"selfbotat-v2/bot/database"
-	"selfbotat-v2/bot/logger"
-	"selfbotat-v2/bot/types"
-	"selfbotat-v2/bot/utils"
+	db "selfbotat-v2/bot/database"
+	Log "selfbotat-v2/bot/logger"
+
+	"github.com/douglascdev/buttifier"
 
 	"github.com/gempir/go-twitch-irc/v4"
 )
@@ -52,7 +54,7 @@ func ensurePool() {
 
 			err := client.Connect()
 			if err != nil {
-					Log.Error.Println("Error connecting to Twitch", err)
+				Log.Error.Println("Error connecting to Twitch", err)
 			}
 		}(i + 1)
 	}
@@ -61,17 +63,16 @@ func ensurePool() {
 }
 
 func createClient(clientID int) *ChatClient {
-
 	client := &ChatClient{
-			twitch.NewClient(
-				config.Config.Twitch.Login, 
-				fmt.Sprintf("oauth:%s", config.Config.Twitch.Password),
-			),
-			make(map[string]bool),
+		twitch.NewClient(
+			config.Config.Twitch.Login,
+			fmt.Sprintf("oauth:%s", config.Config.Twitch.Password),
+		),
+		make(map[string]bool),
 	}
 
 	ClientPool[clientID] = client
-	
+
 	applyListeners(client, clientID)
 
 	return client
@@ -112,11 +113,11 @@ func joinChannels() {
 		return
 	}
 
-	Join("notohh")
+	Join("hash_table")
 
 	for _, channel := range channels {
 		Join(channel.Login)
-	} 
+	}
 }
 
 func Join(channel string) bool {
@@ -133,14 +134,13 @@ func Join(channel string) bool {
 		}
 	}
 
-
 	if !joined {
 		client := createClient(clientCount + 1)
-		ClientPool[clientCount + 1].Join(channel)
+		ClientPool[clientCount+1].Join(channel)
 
 		err := client.Connect()
 		if err != nil {
-				Log.Error.Print("Error connecting to Twitch", err)
+			Log.Error.Print("Error connecting to Twitch", err)
 		}
 	}
 
@@ -151,7 +151,7 @@ func Part(channel string) bool {
 	parted := false
 	for _, client := range ClientPool {
 		if client.joinedChannels[channel] {
-		  client.Depart(channel)
+			client.Depart(channel)
 			parted = true
 		}
 	}
@@ -161,7 +161,7 @@ func Part(channel string) bool {
 
 func Say(channel, message string) {
 	lastClientIndex = (lastClientIndex + 1) % (len(ClientPool))
-	client := ClientPool[lastClientIndex + 1]
+	client := ClientPool[lastClientIndex+1]
 
 	if len(message) > maxMessageSize {
 		message = message[:maxMessageSize]
@@ -181,13 +181,13 @@ func parseMessage(msg twitch.PrivateMessage) {
 	}
 
 	user := types.User{
-		ID: msg.User.ID,
+		ID:    msg.User.ID,
 		Login: msg.User.Name,
-		Name: msg.User.DisplayName,
+		Name:  msg.User.DisplayName,
 	}
 
 	channel := types.Channel{
-		ID: msg.RoomID,
+		ID:    msg.RoomID,
 		Login: msg.Channel,
 	}
 
@@ -198,19 +198,34 @@ func parseMessage(msg twitch.PrivateMessage) {
 	params := utils.CreateParams(args)
 
 	handleMessage(&types.MessageData{
-		User: user,
-		Channel: channel,
-		Text: msg.Message,
-		Command: cmd,
-		Args: args,
-		Params: params,
+		User:     user,
+		Channel:  channel,
+		Text:     msg.Message,
+		Command:  cmd,
+		Args:     args,
+		Params:   params,
 		Hashtags: nil,
-		Raw: msg,
+		Raw:      msg,
 	})
 }
 
 // temp handler while I figure some structure
 func handleMessage(msg *types.MessageData) {
+	if config.Config.Buttsbot.Enabled && msg.User.ID != config.Config.Twitch.Id {
+		butter, err := buttifier.New()
+		if err != nil {
+			Log.Error.Fatal(err)
+		}
+		butter.ButtificationProbability = config.Config.Buttsbot.ButtificationProbability
+		butter.ButtificationRate = config.Config.Buttsbot.ButtificationRate
+		butter.ButtWord = config.Config.Buttsbot.ButtWord
+		buttedMsg, buttHasButted := butter.ButtifySentence(msg.Text)
+
+		if buttHasButted {
+			Say(msg.Channel.Login, buttedMsg)
+		}
+	}
+
 	if msg.User.ID != config.Config.Twitch.Id {
 		return
 	}
@@ -225,5 +240,3 @@ func handleMessage(msg *types.MessageData) {
 		return
 	}
 }
-
-
