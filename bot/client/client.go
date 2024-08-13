@@ -222,7 +222,8 @@ func handleMessage(msg *types.MessageData) {
 		buttedMsg, buttHasButted := butter.ButtifySentence(msg.Text)
 
 		if buttHasButted {
-			Say(msg.Channel.Login, buttedMsg)
+			// prefix with invisible character to avoid running other bot commands with mod privilege
+			Say(msg.Channel.Login, " 󠀀󠀀 "+buttedMsg)
 		}
 	}
 
