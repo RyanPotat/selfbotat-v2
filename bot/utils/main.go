@@ -92,3 +92,14 @@ func CreateParams(args []string) map[string]interface{} {
 
 	return paramsObject
 }
+
+func CreateHashtags(message string) []string {
+	var hashtags []string
+	for _, word := range strings.Split(message, " ") {
+		if strings.HasPrefix(word, "#") {
+		  slicedText := strings.TrimPrefix(word, "#")
+			hashtags = append(hashtags, slicedText)
+		}
+	}
+	return hashtags
+}

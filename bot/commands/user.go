@@ -22,7 +22,7 @@ func init() {
 		Execute: func(msg *types.MessageData) {
 			var input string
 			if len(msg.Args) == 0 {
-				input = msg.User.ID
+				input = msg.User.Login
 			} else {
 				input = msg.Args[0]
 			}
@@ -76,7 +76,7 @@ func init() {
 				"": nameBuilder(user),
 				"ID": user.ID,
 				"Roles": roleBuilder(user.Roles),
-				"Followers": strconv.Itoa(user.Followers.TotalCount),
+				"Follows": strconv.Itoa(user.Followers.TotalCount),
 				"Following": strconv.Itoa(user.Follows.TotalCount),
 				"Chatters": strconv.Itoa(user.Channel.Chatters.Count),
 				"Prefix": user.EmotePrefix.Name,
@@ -89,7 +89,7 @@ func init() {
 
 			// Enforce order of response (idk how else to do this lol)
 			keys := []string{
-				"", "ID", "Roles", "Followers", "Following", "Chatters", "Prefix", "Bio", "Created", "Last Live", "Currently AFK", "🔴 Live for",
+				"", "ID", "Roles", "Follows", "Following", "Chatters", "Prefix", "Bio", "Created", "Last Live", "Currently AFK", "🔴 Live for",
 			}
 
 			out := ""

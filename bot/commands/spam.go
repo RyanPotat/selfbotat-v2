@@ -23,6 +23,15 @@ func init() {
 	bot.AddCmd(types.Command{
 		Name:     "spam",
 		Aliases: []string{"s"},
+		Params: map[string]interface{}{
+			"c":    "Amount of messages to send",
+			"i":    "Interval between messages",
+			"f":    "Fill message to 500 characters",
+			"a":    "Send as announcement",
+			"m":    "Send as action",
+			"stop": "Stop spamming",
+			"in":	  "Spam in another channel",
+		},
 		Execute: func(msg *types.MessageData) {
 			// stop the spamming
 			if stop, ok := msg.Params["stop"]; ok && stop.(bool) {
@@ -90,8 +99,16 @@ func init() {
 				} else { message = message[:500] }
 			}
 
+			// get channel
+			channel := msg.Channel.Login
+			for _, hashtag := range msg.Hashtags {
+				if hashtag != "" {
+					channel = hashtag
+				}
+			}
+
 			stopSpam = make(chan struct{})
-			go spam(msg.Channel.Login, count, interval, prefix + message)
+			go spam(channel, count, interval, prefix + message)
 		},
 	})
 }

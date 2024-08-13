@@ -30,5 +30,6 @@ type MessageData struct {
 	Hashtags []string
 	Command string
 	Args []string
+	RawArgs []string
 	Raw twitch.PrivateMessage
 }
