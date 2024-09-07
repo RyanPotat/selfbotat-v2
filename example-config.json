@@ -5,6 +5,12 @@
     "password": "twitch oauth",
     "client_id": "twitch client id"
   },
+  "buttsbot": {
+    "enabled": true,
+    "buttificationProbability": 0.05,
+    "buttificationRate": 0.15,
+    "buttWord": "butt"
+  },
   "prefix": "go",
   "postgres": {
     "user": "postgres",

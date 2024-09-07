@@ -16,6 +16,13 @@ type TwitchConfig struct {
 	TLAHeaders map[string]string `json:"tlaHeaders"`
 }
 
+type ButtsbotConfig struct {
+	Enabled                  bool    `json:"enabled"`
+	ButtificationProbability float64 `json:"buttificationProbability"`
+	ButtificationRate        float64 `json:"buttificationRate"`
+	ButtWord                 string  `json:"buttWord"`
+}
+
 type URIs struct {
 	PubSub string `json:"pubsub"`
 	TLA    string `json:"tla"`
@@ -23,6 +30,7 @@ type URIs struct {
 
 type BotConfig struct {
 	Prefix   string         `json:"prefix"`
+	Buttsbot ButtsbotConfig `json:"buttsbot"`
 	Postgres PostgresConfig `json:"postgres"`
 	Twitch   TwitchConfig   `json:"twitch"`
 	URIs     URIs           `json:"uris"`

@@ -2,16 +2,20 @@ package client
 
 import (
 	"fmt"
+	"selfbotat-v2/bot"
+	"selfbotat-v2/bot/config"
+	"selfbotat-v2/bot/types"
+	"selfbotat-v2/bot/utils"
+
 	//"slices"
 	"strings"
 	"sync"
 
-	"selfbotat-v2/bot"
-	"selfbotat-v2/bot/config"
-	"selfbotat-v2/bot/database"
-	"selfbotat-v2/bot/logger"
-	"selfbotat-v2/bot/types"
-	"selfbotat-v2/bot/utils"
+	db "selfbotat-v2/bot/database"
+	Log "selfbotat-v2/bot/logger"
+
+	"github.com/Potat-Industries/go-potatFilters"
+	"github.com/douglascdev/buttifier"
 
 	"github.com/gempir/go-twitch-irc/v4"
 )
@@ -62,7 +66,6 @@ func ensurePool() {
 }
 
 func createClient(clientID int) *ChatClient {
-
 	client := &ChatClient{
 		twitch.NewClient(
 			config.Config.Twitch.Login,
@@ -113,7 +116,7 @@ func joinChannels() {
 		return
 	}
 
-	Join("notohh")
+	// Join("hash_table")
 
 	for _, channel := range channels {
 		Join(channel.Login)
@@ -167,6 +170,12 @@ func Say(channel, message string) {
 		message = message[:maxMessageSize]
 	}
 
+	if potatFilters.Test(message, potatFilters.FilterAll) {
+		Log.Warn.Printf("Message filtered in channel '%s': '%s'", channel, message)
+		client.Say(channel, "⚠ Message withheld for containing a banned phrase...")
+		return
+	}
+
 	client.Say(channel, message)
 }
 
@@ -212,6 +221,26 @@ func parseMessage(msg twitch.PrivateMessage) {
 
 // temp handler while I figure some structure
 func handleMessage(msg *types.MessageData) {
+	if config.Config.Buttsbot.Enabled && msg.User.ID != config.Config.Twitch.Id {
+		butter, err := buttifier.New()
+		if err != nil {
+			Log.Error.Fatal(err)
+		}
+		butter.ButtificationProbability = config.Config.Buttsbot.ButtificationProbability
+		butter.ButtificationRate = config.Config.Buttsbot.ButtificationRate
+		butter.ButtWord = config.Config.Buttsbot.ButtWord
+		buttedMsg, buttHasButted := butter.ButtifySentence(msg.Text)
+
+		if buttHasButted {
+			// prefix with invisible character to avoid running other bot commands with mod privilege
+			Say(msg.Channel.Login, "󠀀�"+buttedMsg)
+		}
+	}
+
+	if msg.User.ID != config.Config.Twitch.Id {
+		return
+	}
+
 	// check prefix
 	if !strings.HasPrefix(msg.Text, config.Config.Prefix) {
 		return
@@ -219,11 +248,13 @@ func handleMessage(msg *types.MessageData) {
 
 	// find command
 	cmd := bot.FindCmd(msg.Command)
-	if cmd == nil {	return }
+	if cmd == nil {
+		return
+	}
 
 	// ignore self and non-whitelisted users
 	isSelf := msg.User.ID == config.Config.Twitch.Id
-	//isWhitelisted := slices.Contains(cmd.Whitelist, msg.User.ID)
+	// isWhitelisted := slices.Contains(cmd.Whitelist, msg.User.ID)
 	if !isSelf {
 		return
 	}
