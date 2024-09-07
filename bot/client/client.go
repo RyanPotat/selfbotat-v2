@@ -113,7 +113,7 @@ func joinChannels() {
 		return
 	}
 
-	Join("hash_table")
+	// Join("hash_table")
 
 	for _, channel := range channels {
 		Join(channel.Login)
@@ -223,7 +223,7 @@ func handleMessage(msg *types.MessageData) {
 
 		if buttHasButted {
 			// prefix with invisible character to avoid running other bot commands with mod privilege
-			Say(msg.Channel.Login, " 󠀀󠀀 "+buttedMsg)
+			Say(msg.Channel.Login, "󠀀�"+buttedMsg)
 		}
 	}
 
