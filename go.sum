@@ -1,3 +1,5 @@
+github.com/Potat-Industries/go-potatFilters v0.1.0 h1:0Cji7RSpF90hHVWngp5Ckw+SpZ4b1kKgGVV8wGj5cwM=
+github.com/Potat-Industries/go-potatFilters v0.1.0/go.mod h1:sbz39k2QTCzF51Ar1FP/GfPMu2YvoCb4Xa1ytxZ9XZ4=
 github.com/douglascdev/buttifier v0.0.1 h1:ZYTNYwPlVVTS10U2lmxdMkPKBMwU9rHCxPlxR7YC67Q=
 github.com/douglascdev/buttifier v0.0.1/go.mod h1:NwWm2htIvguVOd+IJPZYlIH9Y5x6969bbswtFmPsZ0E=
 github.com/douglascdev/buttifier v0.0.2 h1:5p79OS8zlf7eqpjCD/warnphPCBl0UJG0DALqyj46yc=

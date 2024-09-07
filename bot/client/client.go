@@ -14,6 +14,7 @@ import (
 	db "selfbotat-v2/bot/database"
 	Log "selfbotat-v2/bot/logger"
 
+	"github.com/Potat-Industries/go-potatFilters"
 	"github.com/douglascdev/buttifier"
 
 	"github.com/gempir/go-twitch-irc/v4"
@@ -167,6 +168,13 @@ func Say(channel, message string) {
 
 	if len(message) > maxMessageSize {
 		message = message[:maxMessageSize]
+	}
+
+	cleanMessage := potatFilters.ReplaceConfusable(message)
+	if potatFilters.Test(cleanMessage, potatFilters.FilterAll) {
+		Log.Warn.Printf("Message filtered in channel '%s': '%s'", channel, message)
+		client.Say(channel, "⚠ Message withheld for containing a banned phrase...")
+		return
 	}
 
 	client.Say(channel, message)

@@ -1,6 +1,6 @@
 module selfbotat-v2
 
-go 1.22.5
+go 1.23.0
 
 require (
 	github.com/fatih/color v1.16.0
@@ -10,6 +10,7 @@ require (
 )
 
 require (
+	github.com/Potat-Industries/go-potatFilters v0.1.0 // indirect
 	github.com/douglascdev/buttifier v0.0.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
