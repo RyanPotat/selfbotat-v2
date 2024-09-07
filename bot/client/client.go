@@ -170,8 +170,7 @@ func Say(channel, message string) {
 		message = message[:maxMessageSize]
 	}
 
-	cleanMessage := potatFilters.ReplaceConfusable(message)
-	if potatFilters.Test(cleanMessage, potatFilters.FilterAll) {
+	if potatFilters.Test(message, potatFilters.FilterAll) {
 		Log.Warn.Printf("Message filtered in channel '%s': '%s'", channel, message)
 		client.Say(channel, "⚠ Message withheld for containing a banned phrase...")
 		return
