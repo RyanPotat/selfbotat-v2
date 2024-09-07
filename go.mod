@@ -9,7 +9,7 @@ require (
 )
 
 require (
-	github.com/douglascdev/buttifier v0.0.2 // indirect
+	github.com/douglascdev/buttifier v0.0.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/speedata/hyphenation v1.0.2 // indirect

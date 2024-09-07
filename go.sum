@@ -2,6 +2,10 @@ github.com/douglascdev/buttifier v0.0.1 h1:ZYTNYwPlVVTS10U2lmxdMkPKBMwU9rHCxPlxR
 github.com/douglascdev/buttifier v0.0.1/go.mod h1:NwWm2htIvguVOd+IJPZYlIH9Y5x6969bbswtFmPsZ0E=
 github.com/douglascdev/buttifier v0.0.2 h1:5p79OS8zlf7eqpjCD/warnphPCBl0UJG0DALqyj46yc=
 github.com/douglascdev/buttifier v0.0.2/go.mod h1:NwWm2htIvguVOd+IJPZYlIH9Y5x6969bbswtFmPsZ0E=
+github.com/douglascdev/buttifier v0.0.3 h1:nc/xx9CMPyYPWD+Nd91OPKhNlOssvdlc+5b9P3njJDc=
+github.com/douglascdev/buttifier v0.0.3/go.mod h1:63K7DrkoTEDVSZglPZI2uu31eqybpUtpJFUnBA1Tf8k=
+github.com/douglascdev/buttifier v0.0.4 h1:CPeAOYdRPCwTpT5gI5P+6DQohkCOGUbiLqjC3QP6bkA=
+github.com/douglascdev/buttifier v0.0.4/go.mod h1:NwWm2htIvguVOd+IJPZYlIH9Y5x6969bbswtFmPsZ0E=
 github.com/fatih/color v1.16.0 h1:zmkK9Ngbjj+K0yRhTVONQh1p/HknKYSlNT+vZCzyokM=
 github.com/fatih/color v1.16.0/go.mod h1:fL2Sau1YI5c0pdGEVCbKQbLXB6edEj1ZgiY4NijnWvE=
 github.com/gempir/go-twitch-irc/v4 v4.0.0 h1:sHVIvbWOv9nHXGEErilclxASv0AaQEr/r/f9C0B9aO8=
