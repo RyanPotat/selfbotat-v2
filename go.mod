@@ -10,7 +10,7 @@ require (
 )
 
 require (
-	github.com/Potat-Industries/go-potatFilters v0.1.0 // indirect
+	github.com/Potat-Industries/go-potatFilters v0.1.1 // indirect
 	github.com/douglascdev/buttifier v0.0.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
