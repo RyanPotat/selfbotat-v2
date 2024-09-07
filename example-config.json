@@ -7,8 +7,8 @@
   },
   "buttsbot": {
     "enabled": true,
-    "buttificationProbability": 0.1,
-    "buttificationRate": 0.3,
+    "buttificationProbability": 0.05,
+    "buttificationRate": 0.15,
     "buttWord": "butt"
   },
   "prefix": "go",
