@@ -58,7 +58,7 @@ type TwitchMessageContent struct {
 
 type TwitchMessageFragment struct {
 	Content TwitchMessageContent `json:"content"`
-	Text    string              `json:"text"`
+	Text    string               `json:"text"`
 }
 
 type TwitchChatters struct {

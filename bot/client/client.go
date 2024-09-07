@@ -6,6 +6,8 @@ import (
 	"selfbotat-v2/bot/config"
 	"selfbotat-v2/bot/types"
 	"selfbotat-v2/bot/utils"
+
+	//"slices"
 	"strings"
 	"sync"
 
@@ -196,6 +198,7 @@ func parseMessage(msg twitch.PrivateMessage) {
 	cmd := parts[0]
 	args := parts[1:]
 	params := utils.CreateParams(args)
+	hashtags := utils.CreateHashtags(msg.Message)
 
 	handleMessage(&types.MessageData{
 		User:     user,
@@ -204,7 +207,7 @@ func parseMessage(msg twitch.PrivateMessage) {
 		Command:  cmd,
 		Args:     args,
 		Params:   params,
-		Hashtags: nil,
+		Hashtags: hashtags,
 		Raw:      msg,
 	})
 }
@@ -231,13 +234,35 @@ func handleMessage(msg *types.MessageData) {
 		return
 	}
 
+	// check prefix
 	if !strings.HasPrefix(msg.Text, config.Config.Prefix) {
 		return
 	}
 
+	// find command
 	cmd := bot.FindCmd(msg.Command)
-	if cmd != nil {
-		cmd.Execute(msg)
+	if cmd == nil {
 		return
 	}
+
+	// ignore self and non-whitelisted users
+	isSelf := msg.User.ID == config.Config.Twitch.Id
+	// isWhitelisted := slices.Contains(cmd.Whitelist, msg.User.ID)
+	if !isSelf {
+		return
+	}
+
+	// remove params from command arguments
+	// for key, _ := range cmd.Params {
+	// 	for _, arg := range msg.Args {
+	// 		isStringParam := strings.HasPrefix(arg, key + ":")
+	// 		isBoolParam := strings.HasPrefix(arg, "-" + key)
+	// 		if isStringParam || isBoolParam {
+	// 			msg.Args = slices.Remove(msg.Args, arg)
+	// 		}
+	// 	}
+	// }
+
+	// execute command
+	cmd.Execute(msg)
 }
